@@ -164,3 +164,7 @@ private struct HistoryRow: View {
         return AppColors.textSecondary
     }
 }
+
+#Preview {
+    ActivityView()
+}

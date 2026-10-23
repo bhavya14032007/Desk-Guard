@@ -197,3 +197,10 @@ private struct SessionDetailRow: View {
         }
     }
 }
+
+#Preview {
+    let state = AppState()
+    state.enableDemoMode()
+    return MySeatView()
+        .environmentObject(state)
+}

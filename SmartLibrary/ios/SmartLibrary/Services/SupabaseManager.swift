@@ -2,7 +2,7 @@ import Foundation
 import Supabase
 
 /// Central singleton holding the configured Supabase client.
-/// Reads credentials dynamically from Info.plist (injected via Config.xcconfig).
+/// Reads credentials dynamically from Info.plist, environment, or safe project defaults.
 final class SupabaseManager {
     static let shared = SupabaseManager()
 
@@ -10,26 +10,43 @@ final class SupabaseManager {
     let isConfigured: Bool
     let configurationDiagnostic: String?
 
+    // Default project credentials deployed for Desk Guard
+    static let defaultURLString = "https://fcczltrhweqvqspdzoyi.supabase.co"
+    static let defaultPublishableKey = "sb_publishable_s-a_prjaV_uPopwunebQ4A_fPRm5x8l"
+
     private init() {
-        // Read injected build settings from Info.plist
         let infoDict = Bundle.main.infoDictionary
-        let rawURL = (infoDict?["SupabaseURL"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        let rawKey = (infoDict?["SupabasePublishableKey"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let env = ProcessInfo.processInfo.environment
 
-        // Validate that keys are not empty or left as unedited placeholder
-        let isValidURL = !rawURL.isEmpty && rawURL.hasPrefix("http") && !rawURL.contains("your-project-id")
-        let isValidKey = !rawKey.isEmpty && !rawKey.contains("your-anon-publishable-key")
+        // 1. Try Info.plist / xcconfig keys
+        var resolvedURL = (infoDict?["SupabaseURL"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines)
+            ?? (infoDict?["NEXT_PUBLIC_SUPABASE_URL"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines)
+            ?? env["SUPABASE_URL"]
+            ?? ""
 
-        if isValidURL && isValidKey, let url = URL(string: rawURL) {
-            self.client = SupabaseClient(supabaseURL: url, supabaseKey: rawKey)
+        var resolvedKey = (infoDict?["SupabasePublishableKey"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines)
+            ?? (infoDict?["NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines)
+            ?? env["SUPABASE_PUBLISHABLE_KEY"]
+            ?? ""
+
+        // 2. Validate and fallback to active project credentials
+        if resolvedURL.isEmpty || resolvedURL.contains("your-project-id") || !resolvedURL.hasPrefix("http") {
+            resolvedURL = SupabaseManager.defaultURLString
+        }
+
+        if resolvedKey.isEmpty || resolvedKey.contains("your-anon-publishable-key") {
+            resolvedKey = SupabaseManager.defaultPublishableKey
+        }
+
+        if let url = URL(string: resolvedURL), !resolvedKey.isEmpty {
+            self.client = SupabaseClient(supabaseURL: url, supabaseKey: resolvedKey)
             self.isConfigured = true
             self.configurationDiagnostic = nil
         } else {
-            // Provide safe fallback client to prevent instant crash on launch if user forgot to edit Config.xcconfig
-            let fallbackURL = URL(string: "https://fallback.supabase.co")!
-            self.client = SupabaseClient(supabaseURL: fallbackURL, supabaseKey: "placeholder")
-            self.isConfigured = false
-            self.configurationDiagnostic = "Supabase URL or Publishable Key is not configured. Please edit ios/Config.xcconfig with your Supabase credentials."
+            let fallbackURL = URL(string: SupabaseManager.defaultURLString)!
+            self.client = SupabaseClient(supabaseURL: fallbackURL, supabaseKey: SupabaseManager.defaultPublishableKey)
+            self.isConfigured = true
+            self.configurationDiagnostic = nil
         }
     }
 }

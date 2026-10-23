@@ -98,6 +98,25 @@ struct AuthView: View {
                             }
                         }
                         .padding(.top, AppColors.Spacing.sm)
+
+                        // Instant Demo / Guest Mode Button for Hackathon Evaluation
+                        Button {
+                            appState.enableDemoMode()
+                        } label: {
+                            HStack(spacing: 6) {
+                                Image(systemName: "sparkles")
+                                    .font(.system(size: 14, weight: .bold))
+                                    .foregroundColor(AppColors.primary)
+                                Text("Explore Demo Mode (Instant Access)")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(AppColors.primary)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 44)
+                            .background(AppColors.primaryLight.opacity(0.4))
+                            .cornerRadius(AppColors.CornerRadius.md)
+                        }
+                        .padding(.top, 4)
                     }
                     .padding(AppColors.Spacing.lg)
                     .background(AppColors.cardBackground)
@@ -119,4 +138,9 @@ struct AuthView: View {
             }
         }
     }
+}
+
+#Preview {
+    AuthView()
+        .environmentObject(AppState())
 }

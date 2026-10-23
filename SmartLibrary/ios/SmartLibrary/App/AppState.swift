@@ -28,6 +28,7 @@ final class AppState: ObservableObject {
     @Published var isExitChoicePresented: Bool = false
     @Published var globalError: AppError? = nil
     @Published var isStateLoading: Bool = false
+    @Published var isDemoMode: Bool = false
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -59,9 +60,29 @@ final class AppState: ObservableObject {
         isStateLoading = false
     }
 
+    /// Enables instant demo mode for hackathon testing without authentication friction
+    func enableDemoMode() {
+        self.isDemoMode = true
+        self.isAuthenticated = true
+        self.currentState = MyLibraryState(
+            visitId: UUID(),
+            visitStatus: "inside",
+            enteredAt: ISO8601DateFormatter().string(from: Date().addingTimeInterval(-1800)),
+            bookingId: UUID(),
+            seatId: UUID(),
+            seatLabel: "A1",
+            bookingStatus: "active",
+            graceDeadline: nil
+        )
+        Task {
+            await self.refreshCurrentState()
+            RealtimeService.shared.subscribeToSeatChanges()
+        }
+    }
+
     /// Refreshes user's active visit and booking status
     func refreshCurrentState() async {
-        guard isAuthenticated else { return }
+        guard isAuthenticated && !isDemoMode else { return }
         do {
             let state = try await LibraryService.shared.getMyState(libraryId: AppConstants.demoLibraryId)
             self.currentState = state
@@ -74,6 +95,7 @@ final class AppState: ObservableObject {
 
     /// Sign out
     func signOut() async {
+        isDemoMode = false
         do {
             try await AuthService.shared.signOut()
             self.isAuthenticated = false

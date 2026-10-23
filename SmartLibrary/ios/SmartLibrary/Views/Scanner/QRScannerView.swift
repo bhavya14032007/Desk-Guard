@@ -128,3 +128,8 @@ struct QRScannerView: View {
         }
     }
 }
+
+#Preview {
+    QRScannerView()
+        .environmentObject(AppState())
+}

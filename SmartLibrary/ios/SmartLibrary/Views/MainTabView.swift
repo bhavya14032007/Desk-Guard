@@ -38,3 +38,10 @@ struct MainTabView: View {
         }
     }
 }
+
+#Preview {
+    let state = AppState()
+    state.enableDemoMode()
+    return MainTabView()
+        .environmentObject(state)
+}

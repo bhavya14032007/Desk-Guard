@@ -324,3 +324,10 @@ struct HomeView: View {
         return "Scan ENTRY turnstile to begin visit"
     }
 }
+
+#Preview {
+    let state = AppState()
+    state.enableDemoMode()
+    return HomeView()
+        .environmentObject(state)
+}

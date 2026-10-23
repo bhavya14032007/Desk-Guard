@@ -234,3 +234,10 @@ private struct LegendItem: View {
         }
     }
 }
+
+#Preview {
+    let state = AppState()
+    state.enableDemoMode()
+    return SeatMapView()
+        .environmentObject(state)
+}
