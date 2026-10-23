@@ -1,0 +1,9 @@
+// Configuration template for Smart Library iOS Client
+// Enter your Supabase project credentials below.
+// Dashboard -> Project Settings -> API.
+
+SUPABASE_URL = https://fcczltrhweqvqspdzoyi.supabase.co
+SUPABASE_PUBLISHABLE_KEY = sb_publishable_s-a_prjaV_uPopwunebQ4A_fPRm5x8l
+
+NEXT_PUBLIC_SUPABASE_URL = https://fcczltrhweqvqspdzoyi.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = sb_publishable_s-a_prjaV_uPopwunebQ4A_fPRm5x8l

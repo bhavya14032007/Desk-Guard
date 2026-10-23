@@ -1,0 +1,30 @@
+# Xcode & Swift
+.DS_Store
+*/.DS_Store
+build/
+DerivedData/
+*.moved-aside
+*.xcuserstate
+*.xcscmblueprint
+SmartLibrary.xcodeproj
+SmartLibrary.xcworkspace
+xcuserdata/
+.swiftpm/
+Package.resolved
+
+# Secrets & Environment configs
+ios/Config.xcconfig
+ios/**/Config.xcconfig
+.env
+.env.local
+*.key
+*.pem
+
+# Windows
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+
+# Supabase Local
+supabase/.temp/
+node_modules/

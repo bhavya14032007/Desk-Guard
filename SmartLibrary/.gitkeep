@@ -1,0 +1,4 @@
+# Smart Library Management System (Desk Guard)
+
+Target: macOS / iOS (XcodeGen + SwiftUI + Supabase Swift SDK)
+Platform: Windows (Generation & Static Validation), macOS (Native Compilation & Testing)

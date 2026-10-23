@@ -1,0 +1,42 @@
+name: SmartLibrary
+options:
+  bundleIdPrefix: com.hackathon.smartlibrary
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "15.0"
+  createIntermediateGroups: true
+
+configFiles:
+  Debug: Config.xcconfig
+  Release: Config.xcconfig
+
+packages:
+  Supabase:
+    url: https://github.com/supabase-community/supabase-swift.git
+    from: 2.26.0
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    PRODUCT_BUNDLE_IDENTIFIER: com.hackathon.smartlibrary.SmartLibrary
+    ENABLE_USER_SCRIPT_SANDBOXING: false
+
+targets:
+  SmartLibrary:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: SmartLibrary
+    dependencies:
+      - package: Supabase
+        product: Supabase
+    settings:
+      base:
+        TARGETED_DEVICE_FAMILY: "1" # iPhone
+        GENERATE_INFOPLIST_FILE: false
+        INFOPLIST_FILE: SmartLibrary/App/Info.plist
+        INFOPLIST_KEY_NSCameraUsageDescription: "Scan library entry and exit QR codes to manage visits and seat reservations."
+        INFOPLIST_KEY_UILaunchScreen_Generation: true
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor

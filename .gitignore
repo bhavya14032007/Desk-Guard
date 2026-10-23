@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Supabase Local
+supabase/.temp/
+.temp/
+
+# Xcode & Swift
+.DS_Store
+*/.DS_Store
+build/
+DerivedData/
+*.moved-aside
+*.xcuserstate
+*.xcscmblueprint
+SmartLibrary.xcodeproj
+SmartLibrary.xcworkspace
+xcuserdata/
+.swiftpm/
+Package.resolved
+
+# Windows
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+
+# Secrets
+.env
+.env.local
+*.key
+*.pem
